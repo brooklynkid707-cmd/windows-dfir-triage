@@ -1,0 +1,30 @@
+title: Windows Security Event Log Cleared
+id: dfirt-0006-log-cleared
+status: stable
+description: >
+  The Windows Security audit log was cleared (Event 1102) or the System log was
+  cleared (Event 104). Outside of a documented maintenance window this is a
+  strong anti-forensic signal.
+references:
+  - https://attack.mitre.org/techniques/T1070/001/
+author: J. Scirica
+date: 2026/10/20
+logsource:
+  product: windows
+detection:
+  selection_security:
+    Channel: Security
+    EventID: 1102
+  selection_system:
+    Channel: System
+    EventID: 104
+  condition: 1 of selection*
+fields:
+  - Computer
+  - EventID
+falsepositives:
+  - Scheduled log rotation / forwarding appliances (document and baseline)
+level: high
+tags:
+  - attack.defense_evasion
+  - attack.t1070.001

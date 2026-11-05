@@ -1,0 +1,4 @@
+ApplicationName,FileKeyLastWriteTimestamp,SHA1,FullPath,Name,Size,LinkDate,ProductName,Publisher,IsOsComponent
+Unassociated,2026-10-19 13:06:31.0000000,f63276a8d01ce62d2885ee3db4e1634246fa375a,C:\Users\jsmith\AppData\Roaming\Microsoft\svchost.exe,svchost.exe,184320,,,,false
+Unassociated,2026-10-19 12:40:00.0000000,b652b90e10ecec7b354a84f9a2ddffda0b58e59b,C:\Windows\System32\svchost.exe,svchost.exe,55320,,Microsoft Windows Operating System,Microsoft Corporation,true
+Unassociated,2026-10-19 13:06:00.0000000,c67f1ee17880030ce11821dcc9be7af90b863d9b,C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe,powershell.exe,452608,,Microsoft Windows Operating System,Microsoft Corporation,true

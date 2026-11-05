@@ -1,0 +1,453 @@
+{
+  "patient_zero": "WS-ACCT-07",
+  "findings": [
+    {
+      "detector": "lateral",
+      "tactic": "Lateral Movement",
+      "technique": "T1021.001",
+      "technique_name": "Remote Services: Remote Desktop Protocol",
+      "severity": "critical",
+      "host": "DC-01",
+      "title": "RDP logon to DC-01 from WS-ACCT-07 as jsmith",
+      "description": "LogonType 10 (RemoteInteractive) from a source/account/time that does not match the RDP allowlist; 4672 shows an administrative session.",
+      "confidence": null,
+      "key": "lateral:rdp:WS-ACCT-07->DC-01:jsmith",
+      "evidence": [
+        "DC-01/Security_EvtxECmd.csv:6 (4624 LogonType 10 from 10.20.5.17)",
+        "DC-01/TerminalServices_EvtxECmd.csv:1 (1149 RDP authentication succeeded)",
+        "DC-01/Security_EvtxECmd.csv:7 (4672 special privileges)"
+      ]
+    },
+    {
+      "detector": "credential",
+      "tactic": "Credential Access",
+      "technique": "T1558.003",
+      "technique_name": "Steal or Forge Kerberos Tickets: Kerberoasting",
+      "severity": "critical",
+      "host": "DC-01",
+      "title": "Kerberoasting: jsmith requested RC4 tickets for 4 service accounts",
+      "description": "svc_erp, svc_fileshare, svc_sql, svc_web requested with RC4 (0x17) by one account within 41s; RC4 service tickets can be cracked offline to recover the service account passwords.",
+      "confidence": null,
+      "key": "credential:kerberoast:DC-01:jsmith",
+      "evidence": [
+        "DC-01/Security_EvtxECmd.csv:2 (service=svc_sql etype=0x17)",
+        "DC-01/Security_EvtxECmd.csv:3 (service=svc_web etype=0x17)",
+        "DC-01/Security_EvtxECmd.csv:4 (service=svc_fileshare etype=0x17)",
+        "DC-01/Security_EvtxECmd.csv:5 (service=svc_erp etype=0x17)"
+      ]
+    },
+    {
+      "detector": "proctree",
+      "tactic": "Credential Access",
+      "technique": "T1003.001",
+      "technique_name": "OS Credential Dumping: LSASS Memory",
+      "severity": "critical",
+      "host": "WS-ACCT-07",
+      "title": "LSASS accessed by non-system process svchost.exe",
+      "description": "C:\\Users\\jsmith\\AppData\\Roaming\\Microsoft\\svchost.exe opened a handle to lsass.exe with GrantedAccess 0x1410.",
+      "confidence": null,
+      "key": "credential:lsass:WS-ACCT-07:c:\\users\\jsmith\\appdata\\roaming\\microsoft\\svchost.exe",
+      "evidence": [
+        "WS-ACCT-07/sysmon.jsonl:14 (GrantedAccess=0x1410)"
+      ]
+    },
+    {
+      "detector": "lateral",
+      "tactic": "Lateral Movement",
+      "technique": "T1021.002",
+      "technique_name": "Remote Services: SMB/Windows Admin Shares",
+      "severity": "high",
+      "host": "FS-01",
+      "title": "PsExec-style service 'PSEXESVC' on FS-01 after network logon from WS-ACCT-07",
+      "description": "A non-allowlisted service was installed within minutes of a Type 3 logon from the same source - remote service execution.",
+      "confidence": null,
+      "key": "lateral:service:WS-ACCT-07->FS-01",
+      "evidence": [
+        "FS-01/Security_EvtxECmd.csv:1 (4624 LogonType 3 from 10.20.5.17 as jsmith)",
+        "FS-01/Security_EvtxECmd.csv:2 (4672 special privileges)",
+        "FS-01/Security_EvtxECmd.csv:3 (EventID 4697 service PSEXESVC)",
+        "FS-01/System_EvtxECmd.csv:2 (EventID 7045 service PSEXESVC)"
+      ]
+    },
+    {
+      "detector": "evasion",
+      "tactic": "Defense Evasion",
+      "technique": "T1070.001",
+      "technique_name": "Indicator Removal: Clear Windows Event Logs",
+      "severity": "high",
+      "host": "FS-01",
+      "title": "Event log cleared on FS-01 (EventID 1102)",
+      "description": "The audit log was cleared.",
+      "confidence": null,
+      "key": "evasion:log_clear:FS-01:1102",
+      "evidence": [
+        "FS-01/Security_EvtxECmd.csv:4 (The audit log was cleared by NORTHWIND\\jsmith)"
+      ]
+    },
+    {
+      "detector": "triage",
+      "tactic": "Collection",
+      "technique": "T1074.001",
+      "technique_name": "Data Staged: Local Data Staging",
+      "severity": "high",
+      "host": "FS-01",
+      "title": "Archive staged at C:\\PerfLogs\\data.7z",
+      "description": "Archive written to a directory commonly abused for staging.",
+      "confidence": null,
+      "key": "triage:staging:FS-01",
+      "evidence": [
+        "FS-01/sysmon.jsonl:6 (Sysmon 11 by 7za.exe)"
+      ]
+    },
+    {
+      "detector": "persistence",
+      "tactic": "Persistence",
+      "technique": "T1543.003",
+      "technique_name": "Create or Modify System Process: Windows Service",
+      "severity": "high",
+      "host": "FS-01",
+      "title": "Service 'PSEXESVC' installed from C:\\Windows\\PSEXESVC.exe",
+      "description": "New service with an unsigned image outside Program Files/System32 (remote-execution service pattern).",
+      "confidence": null,
+      "key": "persistence:service:FS-01:psexesvc",
+      "evidence": [
+        "FS-01/Security_EvtxECmd.csv:3 (EventID 4697 image=C:\\Windows\\PSEXESVC.exe)",
+        "FS-01/System_EvtxECmd.csv:2 (EventID 7045 image=%SystemRoot%\\PSEXESVC.exe)",
+        "FS-01/sysmon.jsonl:2 (image=C:\\Windows\\PSEXESVC.exe)"
+      ]
+    },
+    {
+      "detector": "triage",
+      "tactic": "Collection",
+      "technique": "T1560.001",
+      "technique_name": "Archive Collected Data: Archive via Utility",
+      "severity": "high",
+      "host": "FS-01",
+      "title": "7za.exe archived data on FS-01",
+      "description": "Archiver run from C:\\Users\\Public\\7za.exe (password-protected archive).",
+      "confidence": null,
+      "key": "triage:archive:FS-01",
+      "evidence": [
+        "FS-01/sysmon.jsonl:5 (7za.exe a -p<redacted> C:\\PerfLogs\\data.7z \\\\FS-01\\Finance\\*)"
+      ]
+    },
+    {
+      "detector": "evasion",
+      "tactic": "Defense Evasion",
+      "technique": "T1036.005",
+      "technique_name": "Masquerading: Match Legitimate Name or Location",
+      "severity": "high",
+      "host": "WS-ACCT-07",
+      "title": "Masquerading binary svchost.exe at C:\\Users\\jsmith\\AppData\\Roaming\\Microsoft\\svchost.exe",
+      "description": "svchost.exe is a protected Windows binary name but is running from a user-writable directory.",
+      "confidence": null,
+      "key": "evasion:masquerade:WS-ACCT-07:c:\\users\\jsmith\\appdata\\roaming\\microsoft\\svchost.exe",
+      "evidence": [
+        "WS-ACCT-07/sysmon.jsonl:10 (image=C:\\Users\\jsmith\\AppData\\Roaming\\Microsoft\\svchost.exe)"
+      ]
+    },
+    {
+      "detector": "persistence",
+      "tactic": "Persistence",
+      "technique": "T1053.005",
+      "technique_name": "Scheduled Task/Job: Scheduled Task",
+      "severity": "high",
+      "host": "WS-ACCT-07",
+      "title": "Scheduled task 'MicrosoftEdgeUpdateTaskUser' runs C:\\Users\\jsmith\\AppData\\Roaming\\Microsoft\\svchost.exe",
+      "description": "Task action points into a user-writable path; task is hidden; trigger LogonTrigger, run level HighestAvailable.",
+      "confidence": null,
+      "key": "persistence:task:WS-ACCT-07:microsoftedgeupdatetaskuser",
+      "evidence": [
+        "WS-ACCT-07/tasks/MicrosoftEdgeUpdateTaskUser.xml (<Command>C:\\Users\\jsmith\\AppData\\Roaming\\Microsoft\\svchost.exe</Command>)",
+        "WS-ACCT-07/Security_EvtxECmd.csv:4 (4698 scheduled task created)"
+      ]
+    },
+    {
+      "detector": "proctree",
+      "tactic": "Execution",
+      "technique": "T1059.001",
+      "technique_name": "Command and Scripting Interpreter: PowerShell",
+      "severity": "high",
+      "host": "WS-ACCT-07",
+      "title": "winword.exe spawned powershell.exe (Office application spawning a script host)",
+      "description": "winword.exe is not expected to launch powershell.exe; this is the classic macro-execution lineage.",
+      "confidence": null,
+      "key": "proctree:office_child:WS-ACCT-07:powershell.exe",
+      "evidence": [
+        "WS-ACCT-07/sysmon.jsonl:6 (winword.exe -> powershell.exe: powershell.exe -nop -w hidden -enc SQBFAFgAIAAoAEkATgBFAFIAV)"
+      ]
+    },
+    {
+      "detector": "evasion",
+      "tactic": "Defense Evasion",
+      "technique": "T1070.006",
+      "technique_name": "Indicator Removal: Timestomp",
+      "severity": "high",
+      "host": "WS-ACCT-07",
+      "title": "Timestomping on svchost.exe ($SI older than $FN)",
+      "description": "$SI created 2019-03-19T04:10:11+00:00 is earlier than $FN created 2026-10-19T13:06:30.112000+00:00; the easily-writable $SI times were backdated while $FN retains the true creation time.",
+      "confidence": null,
+      "key": "evasion:timestomp:WS-ACCT-07:\\users\\jsmith\\appdata\\roaming\\microsoft\\svchost.exe",
+      "evidence": [
+        "WS-ACCT-07/mft_MFTECmd.csv:1 ($SI=2019-03-19T04:10:11+00:00 $FN=2026-10-19T13:06:30.112000+00:00)"
+      ]
+    },
+    {
+      "detector": "triage",
+      "tactic": "Command and Control",
+      "technique": "T1071.001",
+      "technique_name": "Application Layer Protocol: Web Protocols",
+      "severity": "high",
+      "host": "WS-ACCT-07",
+      "title": "powershell.exe connected to 198[.]51[.]100[.]25:443 (sync-cdn[.]example)",
+      "description": "Outbound HTTPS from a script host seconds after macro execution.",
+      "confidence": null,
+      "key": "triage:c2:WS-ACCT-07:198.51.100.25",
+      "evidence": [
+        "WS-ACCT-07/sysmon.jsonl:7 (Sysmon 22 DNS sync-cdn.example)",
+        "WS-ACCT-07/sysmon.jsonl:8 (Sysmon 3 -> 198.51.100.25:443)"
+      ]
+    },
+    {
+      "detector": "persistence",
+      "tactic": "Persistence",
+      "technique": "T1546.003",
+      "technique_name": "Event Triggered Execution: WMI Event Subscription",
+      "severity": "high",
+      "host": "WS-ACCT-07",
+      "title": "WMI subscription 'NorthwindUpdater' runs \"C:\\Users\\jsmith\\AppData\\Roaming\\Microsoft\\svchost.exe\"",
+      "description": "Permanent WMI filter + CommandLineEventConsumer + binding (fileless persistence).",
+      "confidence": null,
+      "key": "persistence:wmi:WS-ACCT-07:northwindupdater",
+      "evidence": [
+        "WS-ACCT-07/sysmon.jsonl:15 (Sysmon 19)",
+        "WS-ACCT-07/sysmon.jsonl:16 (Sysmon 20)",
+        "WS-ACCT-07/sysmon.jsonl:17 (Sysmon 21)"
+      ]
+    },
+    {
+      "detector": "persistence",
+      "tactic": "Persistence",
+      "technique": "T1547.001",
+      "technique_name": "Boot or Logon Autostart: Registry Run Keys",
+      "severity": "high",
+      "host": "WS-ACCT-07",
+      "title": "Run key 'OneDriveSync' launches C:\\Users\\jsmith\\AppData\\Roaming\\Microsoft\\svchost.exe",
+      "description": "A Run-key autostart points into a user-writable path; legitimate installers register autostarts under Program Files or System32.",
+      "confidence": null,
+      "key": "persistence:run_key:WS-ACCT-07:onedrivesync",
+      "evidence": [
+        "WS-ACCT-07/runkeys_RECmd.csv:1 (Software\\Microsoft\\Windows\\CurrentVersion\\Run\\OneDriveSync = C:\\Users\\jsmith\\AppData\\Roaming\\Microsoft\\svchost.exe)",
+        "WS-ACCT-07/sysmon.jsonl:12 (Sysmon 13 by svchost.exe: C:\\Users\\jsmith\\AppData\\Roaming\\Microsoft\\svchost.exe)"
+      ]
+    },
+    {
+      "detector": "evasion",
+      "tactic": "Defense Evasion",
+      "technique": "T1562.001",
+      "technique_name": "Impair Defenses: Disable or Modify Tools",
+      "severity": "high",
+      "host": "WS-ACCT-07",
+      "title": "Microsoft Defender real-time protection disabled on WS-ACCT-07",
+      "description": "Defender EventID 5001 - real-time protection turned off.",
+      "confidence": null,
+      "key": "evasion:defender:WS-ACCT-07",
+      "evidence": [
+        "WS-ACCT-07/Defender_EvtxECmd.csv:1 (Microsoft Defender Real-time Protection disabled)"
+      ]
+    },
+    {
+      "detector": "triage",
+      "tactic": "Initial Access",
+      "technique": "T1566.001",
+      "technique_name": "Phishing: Spearphishing Attachment",
+      "severity": "high",
+      "host": "WS-ACCT-07",
+      "title": "Macro document opened in winword.exe launched powershell.exe",
+      "description": "Office opened a macro-enabled document from the user's Downloads folder and the macro started an encoded PowerShell command.",
+      "confidence": null,
+      "key": "triage:initial_access:WS-ACCT-07",
+      "evidence": [
+        "WS-ACCT-07/sysmon.jsonl:6 (parent cmd: \"WINWORD.EXE\" /n \"C:\\Users\\jsmith\\Downloads\\Invoice_Oct.docm\")"
+      ]
+    },
+    {
+      "detector": "triage",
+      "tactic": "Discovery",
+      "technique": "T1018",
+      "technique_name": "Remote System Discovery",
+      "severity": "medium",
+      "host": "DC-01",
+      "title": "`nltest /dclist:northwind.example` on DC-01",
+      "description": "Built-in discovery command run as NORTHWIND\\jsmith (parent cmd.exe).",
+      "confidence": null,
+      "key": "triage:discovery:DC-01:T1018",
+      "evidence": [
+        "DC-01/sysmon.jsonl:4 (nltest /dclist:northwind.example)"
+      ]
+    },
+    {
+      "detector": "triage",
+      "tactic": "Discovery",
+      "technique": "T1033",
+      "technique_name": "System Owner/User Discovery",
+      "severity": "medium",
+      "host": "DC-01",
+      "title": "`whoami /all` on DC-01",
+      "description": "Built-in discovery command run as NORTHWIND\\jsmith (parent cmd.exe).",
+      "confidence": null,
+      "key": "triage:discovery:DC-01:T1033",
+      "evidence": [
+        "DC-01/sysmon.jsonl:5 (whoami /all)"
+      ]
+    },
+    {
+      "detector": "triage",
+      "tactic": "Discovery",
+      "technique": "T1069.002",
+      "technique_name": "Permission Groups Discovery: Domain Groups",
+      "severity": "medium",
+      "host": "DC-01",
+      "title": "`net group \"domain admins\" /domain` on DC-01",
+      "description": "Built-in discovery command run as NORTHWIND\\jsmith (parent cmd.exe).",
+      "confidence": null,
+      "key": "triage:discovery:DC-01:T1069.002",
+      "evidence": [
+        "DC-01/sysmon.jsonl:3 (net group \"domain admins\" /domain)"
+      ]
+    },
+    {
+      "detector": "triage",
+      "tactic": "Discovery",
+      "technique": "T1135",
+      "technique_name": "Network Share Discovery",
+      "severity": "medium",
+      "host": "FS-01",
+      "title": "`net view \\\\DC-01` on FS-01",
+      "description": "Built-in discovery command run as NT AUTHORITY\\SYSTEM (parent cmd.exe).",
+      "confidence": null,
+      "key": "triage:discovery:FS-01:T1135",
+      "evidence": [
+        "FS-01/sysmon.jsonl:4 (net view \\\\DC-01)"
+      ]
+    },
+    {
+      "detector": "triage",
+      "tactic": "Discovery",
+      "technique": "T1087.002",
+      "technique_name": "Account Discovery: Domain Account",
+      "severity": "medium",
+      "host": "WS-ACCT-07",
+      "title": "`net user /domain` on WS-ACCT-07",
+      "description": "Built-in discovery command run as NORTHWIND\\jsmith (parent svchost.exe).",
+      "confidence": null,
+      "key": "triage:discovery:WS-ACCT-07:T1087.002",
+      "evidence": [
+        "WS-ACCT-07/sysmon.jsonl:18 (net user /domain)"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "src": "JUMP-01",
+      "dst": "DC-01",
+      "method": "rdp",
+      "account": "admin.rdp",
+      "technique": "T1021.001",
+      "allowlisted": "CHG0012345"
+    },
+    {
+      "src": "WS-ACCT-07",
+      "dst": "DC-01",
+      "method": "rdp",
+      "account": "jsmith",
+      "technique": "T1021.001",
+      "allowlisted": ""
+    },
+    {
+      "src": "WS-ACCT-07",
+      "dst": "FS-01",
+      "method": "service",
+      "account": "jsmith",
+      "technique": "T1021.002",
+      "allowlisted": ""
+    }
+  ],
+  "execution_matrix": [
+    {
+      "host": "WS-ACCT-07",
+      "target": "svchost.exe",
+      "path": "C:\\Users\\jsmith\\AppData\\Roaming\\Microsoft\\svchost.exe",
+      "confidence": "confirmed",
+      "prefetch": true,
+      "sysmon1": true,
+      "evt4688": true,
+      "amcache": true,
+      "shimcache": true,
+      "run_count": 3,
+      "rationale": "Prefetch proves execution (run count 3, last run 2026-10-19T14:02:11.000Z); Sysmon EventID 1 recorded the process starting; Security 4688 recorded the process starting; Amcache corroborates presence; Shimcache shows the path was enumerated (not proof on its own)"
+    },
+    {
+      "host": "FS-01",
+      "target": "psexesvc.exe",
+      "path": "C:\\Windows\\PSEXESVC.exe",
+      "confidence": "confirmed",
+      "prefetch": true,
+      "sysmon1": true,
+      "evt4688": false,
+      "amcache": true,
+      "shimcache": true,
+      "run_count": 1,
+      "rationale": "Prefetch proves execution (run count 1, last run 2026-10-19T13:15:20.000Z); Sysmon EventID 1 recorded the process starting; Amcache corroborates presence; Shimcache shows the path was enumerated (not proof on its own)"
+    },
+    {
+      "host": "FS-01",
+      "target": "7za.exe",
+      "path": "C:\\Users\\Public\\7za.exe",
+      "confidence": "confirmed",
+      "prefetch": true,
+      "sysmon1": true,
+      "evt4688": false,
+      "amcache": true,
+      "shimcache": true,
+      "run_count": 1,
+      "rationale": "Prefetch proves execution (run count 1, last run 2026-10-19T13:25:00.000Z); Sysmon EventID 1 recorded the process starting; Amcache corroborates presence; Shimcache shows the path was enumerated (not proof on its own)"
+    },
+    {
+      "host": "WS-ACCT-07",
+      "target": "procexp64.exe",
+      "path": "C:\\Users\\jsmith\\Downloads\\ProcessExplorer\\procexp64.exe",
+      "confidence": "possible",
+      "prefetch": false,
+      "sysmon1": false,
+      "evt4688": false,
+      "amcache": false,
+      "shimcache": true,
+      "run_count": null,
+      "rationale": "Only Shimcache references this path. Shimcache records that the file existed and was enumerated by the shim engine; on Windows 8.1/10/11 the 'Executed' flag is not populated, so this is NOT evidence of execution."
+    }
+  ],
+  "iocs": {
+    "sha256": [
+      "2a46f1b16ca78f6c932efda7633def7ecb1d235fda3621f8e757b6beb424b042"
+    ],
+    "paths": [
+      "C:\\PerfLogs\\data.7z",
+      "C:\\Users\\jsmith\\AppData\\Roaming\\Microsoft\\svchost.exe"
+    ],
+    "ips": [
+      "198.51.100.25",
+      "203.0.113.10"
+    ],
+    "ips_defanged": [
+      "198[.]51[.]100[.]25",
+      "203[.]0[.]113[.]10"
+    ],
+    "domains": [
+      "sync-cdn.example"
+    ],
+    "domains_defanged": [
+      "sync-cdn[.]example"
+    ]
+  }
+}

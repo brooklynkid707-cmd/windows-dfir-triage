@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Task version="1.4" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+  <RegistrationInfo>
+    <Date>2025-04-02T02:00:00</Date>
+    <Author>NT AUTHORITY\SYSTEM</Author>
+    <URI>\NorthwindBackup</URI>
+  </RegistrationInfo>
+  <Triggers>
+    <CalendarTrigger>
+      <StartBoundary>2025-04-02T02:00:00</StartBoundary>
+      <ScheduleByDay><DaysInterval>1</DaysInterval></ScheduleByDay>
+    </CalendarTrigger>
+  </Triggers>
+  <Principals>
+    <Principal id="Author">
+      <UserId>NT AUTHORITY\SYSTEM</UserId>
+      <RunLevel>LeastPrivilege</RunLevel>
+    </Principal>
+  </Principals>
+  <Settings>
+    <Enabled>true</Enabled>
+    <Hidden>false</Hidden>
+  </Settings>
+  <Actions Context="Author">
+    <Exec>
+      <Command>C:\Program Files\Northwind\backup.exe</Command>
+    </Exec>
+  </Actions>
+</Task>

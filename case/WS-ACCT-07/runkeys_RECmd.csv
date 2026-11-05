@@ -1,0 +1,3 @@
+LastWriteTimestamp,KeyPath,ValueName,ValueData,ValueData2,Deleted,HivePath,Comment
+2026-10-19 13:06:40.0000000,Software\Microsoft\Windows\CurrentVersion\Run,OneDriveSync,C:\Users\jsmith\AppData\Roaming\Microsoft\svchost.exe,,false,C:\Users\jsmith\NTUSER.DAT,Run key autostart
+2026-09-01 08:00:00,Software\Microsoft\Windows\CurrentVersion\Run,GoogleUpdate,"""C:\Program Files (x86)\Google\Update\GoogleUpdate.exe"" /c",,false,C:\Users\jsmith\NTUSER.DAT,Run key autostart

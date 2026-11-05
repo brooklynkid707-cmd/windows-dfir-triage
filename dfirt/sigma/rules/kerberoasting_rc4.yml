@@ -1,0 +1,31 @@
+title: Kerberoasting RC4 Service Ticket Request
+id: dfirt-0004-kerberoast-rc4
+status: experimental
+description: >
+  A Kerberos service-ticket request (Security 4769) using RC4-HMAC encryption
+  (0x17). RC4 TGS tickets are crackable offline, and a burst of them for many
+  SPNs by one account is Kerberoasting. AES tickets (0x12/0x11) are filtered,
+  and the krbtgt/computer-account machine tickets are excluded.
+references:
+  - https://attack.mitre.org/techniques/T1558/003/
+author: J. Scirica
+date: 2026/10/20
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4769
+    TicketEncryptionType: '0x17'
+  filter_machine:
+    ServiceName|endswith: '$'
+  condition: selection and not filter_machine
+fields:
+  - ServiceName
+  - TicketEncryptionType
+falsepositives:
+  - Legacy applications that still negotiate RC4; baseline per environment
+level: high
+tags:
+  - attack.credential_access
+  - attack.t1558.003

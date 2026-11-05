@@ -1,0 +1,34 @@
+title: Run Key Autostart Into User-Writable Path
+id: dfirt-0005-run-key-userland
+status: experimental
+description: >
+  A Registry Run/RunOnce value was written (Sysmon 13) pointing at a binary in a
+  user-writable directory. Legitimate installers put autostarts under Program
+  Files or System32, which the filter allows through.
+references:
+  - https://attack.mitre.org/techniques/T1547/001/
+author: J. Scirica
+date: 2026/10/20
+logsource:
+  product: windows
+  category: registry_set
+detection:
+  selection:
+    EventID: 13
+    TargetObject|contains: '\CurrentVersion\Run'
+    Details|contains:
+      - '\AppData\'
+      - '\Users\Public\'
+      - '\Temp\'
+      - '\ProgramData\'
+      - '\PerfLogs'
+  condition: selection
+fields:
+  - TargetObject
+  - Details
+falsepositives:
+  - Portable apps a user intentionally autostarts from their profile
+level: high
+tags:
+  - attack.persistence
+  - attack.t1547.001

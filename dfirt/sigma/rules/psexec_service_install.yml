@@ -1,0 +1,37 @@
+title: PsExec-Style Remote Service Installed
+id: dfirt-0008-psexesvc-install
+status: experimental
+description: >
+  A service was installed (System 7045) whose name or image matches the PsExec
+  service (PSEXESVC) or another remote-execution service. A signed vendor
+  service such as ContosoAgent does not match either selection.
+references:
+  - https://attack.mitre.org/techniques/T1021/002/
+  - https://attack.mitre.org/techniques/T1569/002/
+author: J. Scirica
+date: 2026/10/20
+logsource:
+  product: windows
+  service: system
+detection:
+  selection:
+    EventID: 7045
+    ServiceName|contains:
+      - 'PSEXESVC'
+      - 'PAExec'
+      - 'RemCom'
+  selection_image:
+    EventID: 7045
+    ServiceImage|endswith: '\PSEXESVC.exe'
+  condition: 1 of selection*
+fields:
+  - ServiceName
+  - ServiceImage
+falsepositives:
+  - Administrators legitimately using PsExec for remote management
+level: high
+tags:
+  - attack.lateral_movement
+  - attack.t1021.002
+  - attack.execution
+  - attack.t1569.002

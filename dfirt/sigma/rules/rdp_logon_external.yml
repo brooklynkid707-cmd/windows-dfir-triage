@@ -1,0 +1,31 @@
+title: RDP Logon From Outside the Sanctioned Jump Host
+id: dfirt-0011-rdp-not-jumphost
+status: experimental
+description: >
+  A RemoteInteractive logon (4624 LogonType 10) whose source address is not the
+  privileged-access jump host. Server RDP should only originate from JUMP-01
+  (10.20.0.50); RDP from a workstation is a lateral-movement signal.
+references:
+  - https://attack.mitre.org/techniques/T1021/001/
+author: J. Scirica
+date: 2026/10/20
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4624
+    LogonType: 10
+  filter_jumphost:
+    IpAddress: '10.20.0.50'
+  condition: selection and not filter_jumphost
+fields:
+  - Computer
+  - IpAddress
+  - TargetUserName
+falsepositives:
+  - Break-glass console access during a jump-host outage (should carry a ticket)
+level: high
+tags:
+  - attack.lateral_movement
+  - attack.t1021.001

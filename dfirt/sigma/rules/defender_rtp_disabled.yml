@@ -1,0 +1,27 @@
+title: Microsoft Defender Real-Time Protection Disabled
+id: dfirt-0007-defender-rtp-off
+status: stable
+description: >
+  Microsoft Defender logged that real-time protection was turned off (Event
+  5001). Attackers disable AV before dropping or executing tooling.
+references:
+  - https://attack.mitre.org/techniques/T1562/001/
+author: J. Scirica
+date: 2026/10/20
+logsource:
+  product: windows
+  service: windefend
+detection:
+  selection:
+    Channel|contains: 'Windows Defender'
+    EventID: 5001
+  condition: selection
+fields:
+  - Computer
+  - EventID
+falsepositives:
+  - An administrator intentionally pausing Defender for troubleshooting
+level: high
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001

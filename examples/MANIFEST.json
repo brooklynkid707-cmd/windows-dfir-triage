@@ -1,0 +1,141 @@
+{
+  "case": "Northwind Logistics triage",
+  "collector": "KAPE 1.3 (synthetic)",
+  "collected_utc": "2026-10-19T15:00:00Z",
+  "files": [
+    {
+      "path": "DC-01/Security_EvtxECmd.csv",
+      "sha256": "7a3cd6daec452178c4af7c157ba39019c68a0d04a006fcc19a6ab0e64c204efc",
+      "size": 2407,
+      "host": "DC-01"
+    },
+    {
+      "path": "DC-01/TerminalServices_EvtxECmd.csv",
+      "sha256": "2f125aba1f182f4936c0827159bbcdcac740bfe07c6bc36c4a4fd141e68d506b",
+      "size": 886,
+      "host": "DC-01"
+    },
+    {
+      "path": "DC-01/sysmon.jsonl",
+      "sha256": "132217a4652b2885f46c06f727f71bde1d26373caddcd5418641342256d2d76a",
+      "size": 2260,
+      "host": "DC-01"
+    },
+    {
+      "path": "FS-01/Security_EvtxECmd.csv",
+      "sha256": "48727619cf6bfa58665eb1486668aa8b90a68e49ba0fbdf04f0c3548fb588422",
+      "size": 1053,
+      "host": "FS-01"
+    },
+    {
+      "path": "FS-01/System_EvtxECmd.csv",
+      "sha256": "16954edbbda4fa3bd13a0c6b573b5a5dc157150b0a532b51e01f956e335a6b84",
+      "size": 704,
+      "host": "FS-01"
+    },
+    {
+      "path": "FS-01/amcache_AmcacheParserAssociated.csv",
+      "sha256": "3056de88b85807fe5a9dd3eb246d006aa169707206865e1aa352df27065e1c72",
+      "size": 400,
+      "host": "FS-01"
+    },
+    {
+      "path": "FS-01/appcompatcache_AppCompatCacheParser.csv",
+      "sha256": "26efc0334def30bf7be60029f4200dfcd7a54a10bbbb22dcb79b3eb3c7ee76af",
+      "size": 253,
+      "host": "FS-01"
+    },
+    {
+      "path": "FS-01/prefetch_PECmd.csv",
+      "sha256": "e2f974a114e93453a763611c116e373c26039553a8d4ec21d163118b9ea6fe4f",
+      "size": 1035,
+      "host": "FS-01"
+    },
+    {
+      "path": "FS-01/sysmon.jsonl",
+      "sha256": "562d13d87b2757020aaada290868441234910455c8ff9add7939f46916a34be8",
+      "size": 2535,
+      "host": "FS-01"
+    },
+    {
+      "path": "WS-ACCT-07/Defender_EvtxECmd.csv",
+      "sha256": "b34757d424b30a60cf2f8f20b97b3184fbb43ef94fd87f88385f0438dc5a2c67",
+      "size": 744,
+      "host": "WS-ACCT-07"
+    },
+    {
+      "path": "WS-ACCT-07/PowerShell_EvtxECmd.csv",
+      "sha256": "1d6fa5fb8f98dfc96d3ec6e0761912f2404fc3fa674dd328c23debe579ed3d69",
+      "size": 993,
+      "host": "WS-ACCT-07"
+    },
+    {
+      "path": "WS-ACCT-07/Security_EvtxECmd.csv",
+      "sha256": "8007761f4dc0951ec4f43114432ab362d6abfeaaadf0d1243daa28e661731f8f",
+      "size": 1332,
+      "host": "WS-ACCT-07"
+    },
+    {
+      "path": "WS-ACCT-07/amcache_AmcacheParserAssociated.csv",
+      "sha256": "59da778ad44980576116e1c29924975a2e156f3c3fb99ae5b60f2893816dd47f",
+      "size": 695,
+      "host": "WS-ACCT-07"
+    },
+    {
+      "path": "WS-ACCT-07/appcompatcache_AppCompatCacheParser.csv",
+      "sha256": "1603313ac0a74605be43dc014c67ac34e3aa4f263d430da454d4800f0a02ad9e",
+      "size": 618,
+      "host": "WS-ACCT-07"
+    },
+    {
+      "path": "WS-ACCT-07/mft_MFTECmd.csv",
+      "sha256": "b8059ef80a3d56758afeaaf702da5154c916293f15c6e0c8fe679dcbf7370f2c",
+      "size": 768,
+      "host": "WS-ACCT-07"
+    },
+    {
+      "path": "WS-ACCT-07/prefetch_PECmd.csv",
+      "sha256": "abbefbec5aa849780feda2e8bcc5966fdc45a7a712992eb28f23bfbed2132396",
+      "size": 2625,
+      "host": "WS-ACCT-07"
+    },
+    {
+      "path": "WS-ACCT-07/runkeys_RECmd.csv",
+      "sha256": "04674c552c836775589ec6462c978d98ab40ee16b865b18a629acacbee072ad4",
+      "size": 470,
+      "host": "WS-ACCT-07"
+    },
+    {
+      "path": "WS-ACCT-07/sysmon.jsonl",
+      "sha256": "607b445f17337bf90cc07a4d0fc34cae7dcb0813997cbd89af1c82bdd3a7705c",
+      "size": 7857,
+      "host": "WS-ACCT-07"
+    },
+    {
+      "path": "WS-ACCT-07/tasks/MicrosoftEdgeUpdateTaskUser.xml",
+      "sha256": "de5bfeb6cb61bbc8c41f0969243828a659eb957a2ff73409a999ee62d0e12693",
+      "size": 773,
+      "host": "WS-ACCT-07"
+    },
+    {
+      "path": "WS-ACCT-07/tasks/NorthwindBackup.xml",
+      "sha256": "43526c8eaf8347f4f424c66b88c7257e26723e132ef437859032d1c3fa54f232",
+      "size": 851,
+      "host": "WS-ACCT-07"
+    }
+  ],
+  "custody": [
+    {
+      "time": "2026-10-19T15:00:00Z",
+      "actor": "KAPE 1.3 (synthetic)",
+      "action": "acquired",
+      "detail": "20 files hashed SHA-256 at collection"
+    },
+    {
+      "time": "2026-10-19T15:00:00Z",
+      "actor": "J. Scirica (Tier 2)",
+      "action": "received",
+      "detail": "transferred to analysis workstation, hashes re-verified"
+    }
+  ]
+}

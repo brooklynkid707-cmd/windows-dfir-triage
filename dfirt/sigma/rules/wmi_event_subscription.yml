@@ -1,0 +1,25 @@
+title: WMI Permanent Event Subscription Created
+id: dfirt-0010-wmi-subscription
+status: experimental
+description: >
+  A WMI CommandLineEventConsumer was created (Sysmon 20). Permanent WMI event
+  subscriptions are a fileless persistence mechanism that survives reboot.
+references:
+  - https://attack.mitre.org/techniques/T1546/003/
+author: J. Scirica
+date: 2026/10/20
+logsource:
+  product: windows
+  category: wmi_event
+detection:
+  selection:
+    EventID: 20
+  condition: selection
+fields:
+  - Computer
+falsepositives:
+  - A small number of management products register consumers; baseline them
+level: high
+tags:
+  - attack.persistence
+  - attack.t1546.003

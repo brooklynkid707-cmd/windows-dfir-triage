@@ -1,0 +1,41 @@
+title: System Binary Masquerade in User-Writable Path
+id: dfirt-0002-svchost-masquerade
+status: experimental
+description: >
+  A protected Windows binary name (svchost.exe, lsass.exe, services.exe ...) is
+  executing from a user-writable directory such as AppData, Public, Temp or
+  ProgramData. The real binaries only ever run from System32/SysWOW64, so the
+  filter excludes those paths and keeps the legitimate svchost quiet.
+references:
+  - https://attack.mitre.org/techniques/T1036/005/
+author: J. Scirica
+date: 2026/10/20
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection:
+    Image|endswith:
+      - '\svchost.exe'
+      - '\lsass.exe'
+      - '\services.exe'
+      - '\smss.exe'
+      - '\csrss.exe'
+      - '\winlogon.exe'
+    Image|contains:
+      - '\appdata\'
+      - '\users\public\'
+      - '\downloads\'
+      - '\temp\'
+      - '\programdata\'
+      - '\perflogs'
+  condition: selection
+fields:
+  - Image
+  - ParentImage
+falsepositives:
+  - None expected; these names must run from System32
+level: high
+tags:
+  - attack.defense_evasion
+  - attack.t1036.005

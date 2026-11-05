@@ -1,0 +1,18 @@
+# Byte-compiled
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+build/
+dist/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+output/*
+!output/.gitkeep
+
+# evidence manifests written into a working copy of a case
+case/MANIFEST.json

@@ -1,0 +1,3 @@
+RecordNumber,TimeCreated,EventId,Level,Provider,Channel,Computer,UserName,MapDescription,RemoteHost,PayloadData1,PayloadData2,PayloadData3,PayloadData4,PayloadData5,PayloadData6,ExecutableInfo,Payload
+1001,2026-10-19 11:00:05.000000,7045,Information,Service Control Manager,System,FS-01,SYSTEM,A new service was installed,,ContosoAgent,C:\Program Files\Contoso\Agent\ContosoAgent.exe,auto start,signed:Contoso Ltd,,,,Service Name: ContosoAgent; signed by Contoso Ltd
+1002,2026-10-19 13:15:15.000000,7045,Information,Service Control Manager,System,FS-01,SYSTEM,A new service was installed,,PSEXESVC,%SystemRoot%\PSEXESVC.exe,user input,unsigned,,,,Service Name: PSEXESVC; Image: %SystemRoot%\PSEXESVC.exe

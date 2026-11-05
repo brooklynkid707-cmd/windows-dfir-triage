@@ -1,0 +1,5 @@
+RecordNumber,TimeCreated,EventId,Level,Provider,Channel,Computer,UserName,MapDescription,RemoteHost,PayloadData1,PayloadData2,PayloadData3,PayloadData4,PayloadData5,PayloadData6,ExecutableInfo,Payload
+1001,2026-10-19 13:15:10.000000,4624,Information,Microsoft-Windows-Security-Auditing,Security,FS-01,jsmith,An account was successfully logged on,10.20.5.17,LogonType 3,jsmith,NORTHWIND,10.20.5.17,Network,,,Logon Type: 3
+1002,2026-10-19 13:15:11.000000,4672,Information,Microsoft-Windows-Security-Auditing,Security,FS-01,jsmith,Special privileges assigned to new logon,,SeDebugPrivilege,SeTcbPrivilege,jsmith,,,,,Privileges: SeDebugPrivilege
+1003,2026-10-19 13:15:15.000000,4697,Information,Microsoft-Windows-Security-Auditing,Security,FS-01,jsmith,A service was installed in the system,,PSEXESVC,C:\Windows\PSEXESVC.exe,own process,,,,,Service Name: PSEXESVC
+1004,2026-10-19 13:30:00.000000,1102,Information,Microsoft-Windows-Eventlog,Security,FS-01,jsmith,The audit log was cleared,,jsmith,NORTHWIND,,,,,,The audit log was cleared by NORTHWIND\jsmith

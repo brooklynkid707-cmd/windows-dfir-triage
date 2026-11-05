@@ -1,0 +1,291 @@
+{
+  "case": "Northwind Logistics intrusion (synthetic)",
+  "patient_zero": "WS-ACCT-07",
+  "payload": {
+    "name": "svchost.exe",
+    "path": "C:\\Users\\jsmith\\AppData\\Roaming\\Microsoft\\svchost.exe",
+    "sha256": "2a46f1b16ca78f6c932efda7633def7ecb1d235fda3621f8e757b6beb424b042",
+    "sha1": "f63276a8d01ce62d2885ee3db4e1634246fa375a",
+    "execution_confidence": "confirmed",
+    "prefetch_run_count": 3
+  },
+  "shimcache_only": {
+    "path": "C:\\Users\\jsmith\\Downloads\\ProcessExplorer\\procexp64.exe",
+    "host": "WS-ACCT-07",
+    "execution_confidence": "possible"
+  },
+  "expected_findings": [
+    {
+      "id": "IA-1",
+      "tactic": "Initial Access",
+      "technique": "T1566.001",
+      "host": "WS-ACCT-07",
+      "fact": "Macro document opened in WINWORD launched PowerShell"
+    },
+    {
+      "id": "EX-1",
+      "tactic": "Execution",
+      "technique": "T1059.001",
+      "host": "WS-ACCT-07",
+      "fact": "WINWORD.EXE spawned powershell.exe -enc"
+    },
+    {
+      "id": "C2-1",
+      "tactic": "Command and Control",
+      "technique": "T1071.001",
+      "host": "WS-ACCT-07",
+      "fact": "PowerShell connected to sync-cdn.example (198.51.100.25:443)"
+    },
+    {
+      "id": "DE-1",
+      "tactic": "Defense Evasion",
+      "technique": "T1036.005",
+      "host": "WS-ACCT-07",
+      "fact": "svchost.exe running from %APPDATA%\\Microsoft"
+    },
+    {
+      "id": "DE-2",
+      "tactic": "Defense Evasion",
+      "technique": "T1070.006",
+      "host": "WS-ACCT-07",
+      "fact": "Payload $SI created backdated before $FN created"
+    },
+    {
+      "id": "DE-3",
+      "tactic": "Defense Evasion",
+      "technique": "T1562.001",
+      "host": "WS-ACCT-07",
+      "fact": "Defender real-time protection disabled (5001)"
+    },
+    {
+      "id": "PE-1",
+      "tactic": "Persistence",
+      "technique": "T1547.001",
+      "host": "WS-ACCT-07",
+      "fact": "HKCU Run value OneDriveSync -> payload"
+    },
+    {
+      "id": "PE-2",
+      "tactic": "Persistence",
+      "technique": "T1053.005",
+      "host": "WS-ACCT-07",
+      "fact": "Scheduled task MicrosoftEdgeUpdateTaskUser -> payload"
+    },
+    {
+      "id": "PE-3",
+      "tactic": "Persistence",
+      "technique": "T1546.003",
+      "host": "WS-ACCT-07",
+      "fact": "WMI subscription NorthwindUpdater -> payload"
+    },
+    {
+      "id": "CA-1",
+      "tactic": "Credential Access",
+      "technique": "T1003.001",
+      "host": "WS-ACCT-07",
+      "fact": "Payload opened LSASS with GrantedAccess 0x1410"
+    },
+    {
+      "id": "DI-1",
+      "tactic": "Discovery",
+      "technique": "T1087.002",
+      "host": "WS-ACCT-07",
+      "fact": "net user /domain"
+    },
+    {
+      "id": "CA-2",
+      "tactic": "Credential Access",
+      "technique": "T1558.003",
+      "host": "DC-01",
+      "fact": "4 RC4 (0x17) TGS requests for 4 service accounts in 41 s"
+    },
+    {
+      "id": "LM-1",
+      "tactic": "Lateral Movement",
+      "technique": "T1021.002",
+      "host": "FS-01",
+      "fact": "Type 3 logon + PSEXESVC service install from WS-ACCT-07"
+    },
+    {
+      "id": "PE-4",
+      "tactic": "Persistence",
+      "technique": "T1543.003",
+      "host": "FS-01",
+      "fact": "PSEXESVC service installed from C:\\Windows (7045)"
+    },
+    {
+      "id": "DI-2",
+      "tactic": "Discovery",
+      "technique": "T1135",
+      "host": "FS-01",
+      "fact": "net view \\\\DC-01"
+    },
+    {
+      "id": "CO-1",
+      "tactic": "Collection",
+      "technique": "T1560.001",
+      "host": "FS-01",
+      "fact": "7za.exe archived the Finance share with a password"
+    },
+    {
+      "id": "CO-2",
+      "tactic": "Collection",
+      "technique": "T1074.001",
+      "host": "FS-01",
+      "fact": "Archive staged at C:\\PerfLogs\\data.7z"
+    },
+    {
+      "id": "DE-4",
+      "tactic": "Defense Evasion",
+      "technique": "T1070.001",
+      "host": "FS-01",
+      "fact": "Security log cleared (1102)"
+    },
+    {
+      "id": "LM-2",
+      "tactic": "Lateral Movement",
+      "technique": "T1021.001",
+      "host": "DC-01",
+      "fact": "RDP (Type 10 + 1149) from WS-ACCT-07 as jsmith"
+    },
+    {
+      "id": "DI-3",
+      "tactic": "Discovery",
+      "technique": "T1069.002",
+      "host": "DC-01",
+      "fact": "net group \"domain admins\" /domain"
+    },
+    {
+      "id": "DI-4",
+      "tactic": "Discovery",
+      "technique": "T1018",
+      "host": "DC-01",
+      "fact": "nltest /dclist:northwind.example"
+    },
+    {
+      "id": "DI-5",
+      "tactic": "Discovery",
+      "technique": "T1033",
+      "host": "DC-01",
+      "fact": "whoami /all"
+    }
+  ],
+  "lateral_edges": [
+    {
+      "src": "WS-ACCT-07",
+      "dst": "FS-01",
+      "method": "service"
+    },
+    {
+      "src": "WS-ACCT-07",
+      "dst": "DC-01",
+      "method": "rdp"
+    }
+  ],
+  "kerberoast": {
+    "requester": "jsmith",
+    "host": "DC-01",
+    "service_accounts": [
+      "svc_erp",
+      "svc_fileshare",
+      "svc_sql",
+      "svc_web"
+    ]
+  },
+  "iocs": {
+    "sha256": [
+      "2a46f1b16ca78f6c932efda7633def7ecb1d235fda3621f8e757b6beb424b042"
+    ],
+    "paths": [
+      "C:\\PerfLogs\\data.7z",
+      "C:\\Users\\jsmith\\AppData\\Roaming\\Microsoft\\svchost.exe"
+    ],
+    "ips": [
+      "198.51.100.25",
+      "203.0.113.10"
+    ],
+    "domains": [
+      "sync-cdn.example"
+    ]
+  },
+  "benign": [
+    {
+      "label": "Signed updater Run key under Program Files (GoogleUpdate)",
+      "host": "WS-ACCT-07",
+      "source": "runkeys_RECmd.csv",
+      "row": 2
+    },
+    {
+      "label": "IT scheduled task NorthwindBackup (Program Files, SYSTEM)",
+      "host": "WS-ACCT-07",
+      "source": "NorthwindBackup.xml",
+      "row": 0
+    },
+    {
+      "label": "Admin RDP from JUMP-01 in business hours, ticket CHG0012345 (4624)",
+      "host": "DC-01",
+      "source": "Security_EvtxECmd.csv",
+      "row": 8
+    },
+    {
+      "label": "Admin RDP from JUMP-01 in business hours, ticket CHG0012345 (1149)",
+      "host": "DC-01",
+      "source": "TerminalServices_EvtxECmd.csv",
+      "row": 2
+    },
+    {
+      "label": "SCCM PowerShell spawned by CcmExec.exe (Sysmon 1)",
+      "host": "WS-ACCT-07",
+      "source": "sysmon.jsonl",
+      "row": 2
+    },
+    {
+      "label": "SCCM inventory script block (4104)",
+      "host": "WS-ACCT-07",
+      "source": "PowerShell_EvtxECmd.csv",
+      "row": 1
+    },
+    {
+      "label": "svchost.exe in System32 spawned by services.exe (Sysmon 1)",
+      "host": "WS-ACCT-07",
+      "source": "sysmon.jsonl",
+      "row": 1
+    },
+    {
+      "label": "svchost.exe in System32 ($MFT, $SI == $FN)",
+      "host": "WS-ACCT-07",
+      "source": "mft_MFTECmd.csv",
+      "row": 2
+    },
+    {
+      "label": "Signed vendor service ContosoAgent (7045)",
+      "host": "FS-01",
+      "source": "System_EvtxECmd.csv",
+      "row": 1
+    },
+    {
+      "label": "Signed vendor service ContosoAgent process (Sysmon 1)",
+      "host": "FS-01",
+      "source": "sysmon.jsonl",
+      "row": 1
+    },
+    {
+      "label": "AES (0x12) Kerberos service ticket for a normal user",
+      "host": "DC-01",
+      "source": "Security_EvtxECmd.csv",
+      "row": 1
+    },
+    {
+      "label": "Teams shortcut written to the Startup folder by Teams.exe",
+      "host": "WS-ACCT-07",
+      "source": "sysmon.jsonl",
+      "row": 3
+    },
+    {
+      "label": "4648 explicit credentials to localhost by SCCM",
+      "host": "WS-ACCT-07",
+      "source": "Security_EvtxECmd.csv",
+      "row": 1
+    }
+  ]
+}

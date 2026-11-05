@@ -1,0 +1,31 @@
+# Sanctioned activity for the Northwind Logistics environment (synthetic).
+# Every entry needs an owner and a ticket; detectors suppress only an exact match.
+
+rdp:
+  - account: admin.rdp
+    source_ip: 10.20.0.50          # JUMP-01 (PAM jump host)
+    targets: [DC-01, FS-01]
+    business_hours_utc: [13, 23]   # 08:00-18:00 America/Chicago (CDT, UTC-5)
+    ticket: CHG0012345
+    owner: IT Infrastructure
+
+run_keys:
+  - value_name: GoogleUpdate
+    path_prefix: 'C:\Program Files (x86)\Google\Update\'
+    ticket: STD-SOFTWARE-004
+
+scheduled_tasks:
+  - name: NorthwindBackup
+    command_prefix: 'C:\Program Files\Northwind\'
+    principal: NT AUTHORITY\SYSTEM
+    ticket: CHG0009876
+
+services:
+  - name: ContosoAgent
+    image_prefix: 'C:\Program Files\Contoso\'
+    signer: Contoso Ltd
+    ticket: CHG0011002
+
+powershell_parents:
+  - parent: CcmExec.exe            # Microsoft SCCM client
+    account: svc_sccm

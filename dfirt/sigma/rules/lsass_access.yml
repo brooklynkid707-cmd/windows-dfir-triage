@@ -1,0 +1,39 @@
+title: LSASS Memory Access From Non-System Process
+id: dfirt-0003-lsass-access
+status: experimental
+description: >
+  A process opened a handle to lsass.exe with a GrantedAccess mask that permits
+  reading process memory (0x1410, 0x1010, 0x143a ...). Legitimate readers such
+  as wininit.exe, services.exe and MsMpEng.exe (running from System32) are
+  filtered out.
+references:
+  - https://attack.mitre.org/techniques/T1003/001/
+author: J. Scirica
+date: 2026/10/20
+logsource:
+  product: windows
+  category: process_access
+detection:
+  selection:
+    EventID: 10
+    TargetImage|endswith: '\lsass.exe'
+    GrantedAccess|startswith: '0x14'
+  filter_system:
+    SourceImage|contains:
+      - '\system32\'
+      - '\syswow64\'
+    SourceImage|endswith:
+      - '\wininit.exe'
+      - '\services.exe'
+      - '\msmpeng.exe'
+      - '\wmiprvse.exe'
+  condition: selection and not filter_system
+fields:
+  - SourceImage
+  - GrantedAccess
+falsepositives:
+  - Some EDR/AV products read LSASS; validate SourceImage path and signature
+level: critical
+tags:
+  - attack.credential_access
+  - attack.t1003.001

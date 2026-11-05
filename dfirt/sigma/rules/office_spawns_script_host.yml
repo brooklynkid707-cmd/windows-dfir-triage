@@ -1,0 +1,44 @@
+title: Office Application Spawns Script Host
+id: dfirt-0001-office-script-child
+status: experimental
+description: >
+  A Microsoft Office application spawned a script interpreter (PowerShell, cmd,
+  wscript, mshta ...). This is the canonical macro-execution lineage. A benign
+  SCCM PowerShell is parented by CcmExec.exe, not by an Office app, so it does
+  not match.
+references:
+  - https://attack.mitre.org/techniques/T1566/001/
+author: J. Scirica
+date: 2026/10/20
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection:
+    ParentImage|endswith:
+      - '\winword.exe'
+      - '\excel.exe'
+      - '\powerpnt.exe'
+      - '\outlook.exe'
+      - '\mspub.exe'
+    Image|endswith:
+      - '\powershell.exe'
+      - '\pwsh.exe'
+      - '\cmd.exe'
+      - '\wscript.exe'
+      - '\cscript.exe'
+      - '\mshta.exe'
+      - '\rundll32.exe'
+  condition: selection
+fields:
+  - ParentImage
+  - Image
+  - CommandLine
+falsepositives:
+  - Office add-ins that legitimately shell out (rare; validate the command line)
+level: high
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - attack.initial_access
+  - attack.t1566.001

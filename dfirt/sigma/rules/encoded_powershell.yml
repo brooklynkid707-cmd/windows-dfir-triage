@@ -1,0 +1,33 @@
+title: Encoded / Hidden PowerShell Command
+id: dfirt-0009-encoded-powershell
+status: experimental
+description: >
+  powershell.exe launched with an encoded command and a hidden window
+  (-enc / -EncodedCommand with -w hidden / -nop). Benign SCCM inventory scripts
+  run with -File and are not encoded, so they do not match.
+references:
+  - https://attack.mitre.org/techniques/T1059/001/
+author: J. Scirica
+date: 2026/10/20
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection:
+    Image|endswith: '\powershell.exe'
+    CommandLine|contains:
+      - ' -enc '
+      - ' -EncodedCommand '
+      - ' -e '
+  selection_hidden:
+    Image|endswith: '\powershell.exe'
+    CommandLine|contains: 'hidden'
+  condition: selection and selection_hidden
+fields:
+  - CommandLine
+falsepositives:
+  - Some management tooling base64-encodes commands; validate the decoded body
+level: high
+tags:
+  - attack.execution
+  - attack.t1059.001
